@@ -86,14 +86,21 @@ public class SerializeBolt extends BaseRichBolt {
         // Registramos para calculo de throughput
         mc.manage(new MetricsEvent(MetricsEvent.UPDATE_THROUGHPUT, aux));
 		
-		String message = input.getStringByField("message");
+        Object message;
+        
+        try {
+			message = (JSONObject)input.getValueByField("message");
+		} catch (ClassCastException e) {
+			message = (String)input.getStringByField("message");
+		}
+
 		JSONObject json = (JSONObject)input.getValueByField("extraData");
 		
 		JSONObject obj = new JSONObject();
 		obj.put("message", message);
 		obj.put("extraData", json);
 			
-		collector.emit(input, new Values(obj.toString()));
+		collector.emit(input, new Values(obj));
 		collector.ack(input);
 			
 	}

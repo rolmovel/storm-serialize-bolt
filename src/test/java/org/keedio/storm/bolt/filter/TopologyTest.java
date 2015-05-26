@@ -70,20 +70,15 @@ public class TopologyTest {
 				Map result = Testing.completeTopology(cluster, topology,
 						completeTopologyParam);
 
-				List<String> tupleValues = (ArrayList<String>)Testing.readTuples(result, "3").get(0);
+				List tupleValues = (ArrayList)Testing.readTuples(result, "3").get(0);
 
 				Assert.assertTrue("Solo existe un elemento en la tupla", tupleValues.size() == 1);
 				JSONParser parser = new JSONParser();  
 				
 				// El mensaje recibido es del tipo {"extraData":"...", "message":"..."}
 				JSONObject obj;
-				try {
-					obj = (JSONObject)parser.parse((String)tupleValues.get(0));
-					Assert.assertNotNull("Existe el elemento message", obj.get("message"));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				obj = (JSONObject)tupleValues.get(0);
+				Assert.assertNotNull("Existe el elemento message", obj.get("message"));
 			}
 
 		});
